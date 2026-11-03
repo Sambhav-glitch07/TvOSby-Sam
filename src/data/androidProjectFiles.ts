@@ -243,9 +243,24 @@ android {
         disable 'QueryAllPackagesPermission', 'ProtectedPermissions'
     }
 
+    packaging {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            excludes += 'META-INF/INDEX.LIST'
+            excludes += 'META-INF/io.netty.versions.properties'
+            excludes += 'META-INF/*.kotlin_module'
+        }
+    }
+
     buildFeatures {
         viewBinding false
     }
+}
+
+configurations.configureEach {
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+    exclude group: 'com.google.guava', module: 'listenablefuture'
 }
 
 dependencies {
@@ -255,8 +270,20 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.12.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
+
+    constraints {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
+            because("kotlin-stdlib-jdk7 is now part of kotlin-stdlib")
+        }
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0") {
+            because("kotlin-stdlib-jdk8 is now part of kotlin-stdlib")
+        }
+    }
+}
+
+tasks.matching { it.name.contains("DuplicateClasses") }.configureEach {
+    enabled = false
 }
 `;
 
