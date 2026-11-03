@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sambhav TV OS Obsidian & Glass Palette -->
+    <color name="tv_bg_obsidian">#FF05070A</color>
+    <color name="tv_bg_charcoal">#FF0F131A</color>
+    <color name="tv_bg_surface">#FF161B24</color>
+
+    <!-- Frosted Glass Overlays -->
+    <color name="tv_glass_surface_idle">#1CFFFFFF</color>
+    <color name="tv_glass_surface_subtle">#0AFFFFFF</color>
+    <color name="tv_glass_border_idle">#26FFFFFF</color>
+    <color name="tv_glass_surface_focused">#E6FFFFFF</color>
+    <color name="tv_glass_border_focused">#F2FFFFFF</color>
+    <color name="tv_glass_glow">#4DFFFFFF</color>
+
+    <!-- Text & Typography -->
+    <color name="tv_text_primary">#FFF9FAFB</color>
+    <color name="tv_text_secondary">#9CA3AF</color>
+    <color name="tv_text_tertiary">#6B7280</color>
+    <color name="tv_text_dark">#FF0A0D12</color>
+
+    <!-- Accents & Indicators -->
+    <color name="tv_accent_apple_cyan">#38BDF8</color>
+    <color name="tv_accent_amber">#FBBF24</color>
+    <color name="tv_accent_emerald">#34D399</color>
+    <color name="tv_badge_hdr">#E2E8F0</color>
+    <color name="tv_badge_hdr_bg">#33FFFFFF</color>
+    <color name="tv_scrim_bottom">#E605070A</color>
+</resources>

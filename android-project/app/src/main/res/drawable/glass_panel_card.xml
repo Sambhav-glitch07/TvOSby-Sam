@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Focused state: High translucency with bright specular border and inner glow -->
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="14dp" />
+            <solid android:color="#E6FFFFFF" />
+            <stroke
+                android:width="2dp"
+                android:color="#FFFFFFFF" />
+        </shape>
+    </item>
+    <!-- Default state: Subtle frosted glass with fine rim highlight -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="14dp" />
+            <solid android:color="#1AFFFFFF" />
+            <stroke
+                android:width="1dp"
+                android:color="#2BFFFFFF" />
+        </shape>
+    </item>
+</selector>

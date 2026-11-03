@@ -1,0 +1,6 @@
+{
+  "name": "Sambhav TV OS - Premium Android TV Launcher",
+  "description": "Apple tvOS-inspired glass interface launcher for TCL Android TV (Android 9 API 28) with cinematic hero banners, D-pad navigation, native Kotlin architecture, and GitHub Actions build.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/settings_tile_root"
+    android:layout_width="210dp"
+    android:layout_height="90dp"
+    android:layout_marginEnd="16dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:focusable="true"
+    android:clickable="true"
+    android:background="@drawable/glass_panel_card"
+    android:paddingStart="18dp"
+    android:paddingEnd="18dp">
+
+    <ImageView
+        android:id="@+id/iv_setting_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_sambhav_logo"
+        android:contentDescription="Setting Icon" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="14dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_setting_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HDMI 1 / eARC"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/tv_text_primary" />
+
+        <TextView
+            android:id="@+id/tv_setting_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Connected"
+            android:textSize="12sp"
+            android:textColor="@color/tv_text_secondary" />
+    </LinearLayout>
+
+</LinearLayout>

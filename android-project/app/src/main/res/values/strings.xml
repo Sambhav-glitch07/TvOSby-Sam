@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sambhav TV OS</string>
+    <string name="sambhav_brand">SAMBHAV</string>
+    <string name="brand_subtitle">CINEMATIC TV OS</string>
+
+    <!-- Top Navigation Tabs -->
+    <string name="tab_home">Home</string>
+    <string name="tab_movies">Movies</string>
+    <string name="tab_shows">Shows</string>
+    <string name="tab_apps">Apps</string>
+    <string name="tab_settings">Settings</string>
+
+    <!-- Sections -->
+    <string name="section_quick_launch">Recent Applications</string>
+    <string name="section_featured_cinematic">Featured Cinematic Releases</string>
+    <string name="section_installed_apps">Television Applications</string>
+    <string name="section_sambhav_originals">Sambhav Originals &amp; 4K HDR</string>
+    <string name="section_trending_now">Trending on Television</string>
+    <string name="section_live_tv">Live Broadcast Channels</string>
+    <string name="section_settings_tcl">TCL System &amp; Inputs</string>
+
+    <!-- Actions -->
+    <string name="action_play">Watch Now</string>
+    <string name="action_trailer">Preview</string>
+    <string name="action_add_watchlist">Add to Watchlist</string>
+    <string name="action_open_app">Open Application</string>
+    <string name="action_app_details">Application Info</string>
+
+    <!-- System info -->
+    <string name="tcl_device_model">TCL 4K Android TV (Android 9 Pie / API 28)</string>
+    <string name="audio_dolby_atmos">Dolby Atmos Audio</string>
+    <string name="video_dolby_vision">Dolby Vision 4K</string>
+</resources>
