@@ -1,6 +1,8 @@
+
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base application theme for Sambhav TV OS (Android 9 API 28) -->
+
+    <!-- Base application theme -->
     <style name="Theme.SambhavTvOs" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@color/tv_bg_obsidian</item>
         <item name="android:windowNoTitle">true</item>
@@ -13,32 +15,48 @@
         <item name="android:windowActivityTransitions">true</item>
     </style>
 
-    <!-- Glass typography styles -->
-    <style name="TextAppearance.Sambhav.Brand">
+    <!-- Base Sambhav typography -->
+    <style name="TextAppearance.Sambhav"
+        parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/tv_text_primary</item>
+        <item name="android:fontFamily">sans</item>
+    </style>
+
+    <!-- Brand typography -->
+    <style name="TextAppearance.Sambhav.Brand"
+        parent="TextAppearance.Sambhav">
         <item name="android:textSize">22sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:letterSpacing">0.12</item>
         <item name="android:textColor">@color/tv_text_primary</item>
     </style>
 
-    <style name="TextAppearance.Sambhav.Tab">
+    <!-- Navigation tabs -->
+    <style name="TextAppearance.Sambhav.Tab"
+        parent="TextAppearance.Sambhav">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:letterSpacing">0.05</item>
         <item name="android:textColor">@color/tv_text_secondary</item>
     </style>
 
-    <style name="TextAppearance.Sambhav.HeroTitle">
+    <!-- Hero titles -->
+    <style name="TextAppearance.Sambhav.HeroTitle"
+        parent="TextAppearance.Sambhav">
         <item name="android:textSize">44sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/tv_text_primary</item>
         <item name="android:lineSpacingExtra">6dp</item>
     </style>
 
-    <style name="TextAppearance.Sambhav.SectionHeader">
+    <!-- Section headers -->
+    <style name="TextAppearance.Sambhav.SectionHeader"
+        parent="TextAppearance.Sambhav">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:letterSpacing">0.03</item>
         <item name="android:textColor">@color/tv_text_primary</item>
     </style>
+
 </resources>
