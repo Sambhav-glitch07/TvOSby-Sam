@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="tv.sambhav.os.launcher">
 
-    <!-- TV Launcher Hardware Features -->
     <uses-feature
         android:name="android.software.leanback"
         android:required="false" />
@@ -14,14 +13,13 @@
         android:name="android.hardware.microphone"
         android:required="false" />
 
-    <!-- Query packages on Android 11+ (API 30+) while maintaining API 28 backwards compatibility -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_sambhav_logo"
         android:label="@string/app_name"
         android:banner="@drawable/ic_tv_banner"
         android:supportsRtl="true"
@@ -38,21 +36,18 @@
             android:screenOrientation="landscape"
             android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenLayout|screenSize|smallestScreenSize">
 
-            <!-- Default System Launcher -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
-            <!-- Android TV Leanback Launcher -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- Broadcast receiver for dynamically detecting package install / uninstall -->
         <receiver
             android:name=".receiver.PackageChangeReceiver"
             android:exported="true">

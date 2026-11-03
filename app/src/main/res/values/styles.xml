@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme for Sambhav TV OS (Android 9 API 28) -->
+    <style name="Theme.SambhavTvOs" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/tv_bg_obsidian</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowOverscan">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:colorBackground">@color/tv_bg_obsidian</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowActivityTransitions">true</item>
+    </style>
+
+    <!-- Glass typography styles -->
+    <style name="TextAppearance.Sambhav.Brand">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.12</item>
+        <item name="android:textColor">@color/tv_text_primary</item>
+    </style>
+
+    <style name="TextAppearance.Sambhav.Tab">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:letterSpacing">0.05</item>
+        <item name="android:textColor">@color/tv_text_secondary</item>
+    </style>
+
+    <style name="TextAppearance.Sambhav.HeroTitle">
+        <item name="android:textSize">44sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/tv_text_primary</item>
+        <item name="android:lineSpacingExtra">6dp</item>
+    </style>
+
+    <style name="TextAppearance.Sambhav.SectionHeader">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.03</item>
+        <item name="android:textColor">@color/tv_text_primary</item>
+    </style>
+</resources>
