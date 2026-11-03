@@ -4,7 +4,6 @@ import android.animation.TimeInterpolator
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
-import androidx.core.view.ViewCompat
 
 /**
  * Handles smooth television focus scaling, elevation, and depth effects
@@ -36,19 +35,17 @@ object FocusElevationHelper {
             val targetElevation = if (hasFocus) focusedElev else idleElev
             val interpolator = if (hasFocus) focusInInterpolator else focusOutInterpolator
 
-            v.animate()
+            val animator = v.animate()
                 .scaleX(targetScale)
                 .scaleY(targetScale)
                 .setDuration(DURATION_FOCUS_MS)
                 .setInterpolator(interpolator)
-                .start()
 
             if (elevateZ) {
-                ViewCompat.animate(v)
-                    .translationZ(if (hasFocus) targetElevation else 0f)
-                    .setDuration(DURATION_FOCUS_MS)
-                    .start()
+                animator.translationZ(if (hasFocus) targetElevation else 0f)
             }
+
+            animator.start()
 
             onFocusChanged?.invoke(hasFocus)
         }
