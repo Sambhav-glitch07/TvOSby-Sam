@@ -33,8 +33,14 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - name: Grant Execute Permission for Gradlew
-        run: chmod +x gradlew
+      - name: Ensure Gradle Wrapper & Permissions
+        run: |
+          mkdir -p gradle/wrapper
+          if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ]; then
+            echo "Fetching official gradle-wrapper.jar for Gradle 8.9..."
+            curl -sSLo gradle/wrapper/gradle-wrapper.jar https://raw.githubusercontent.com/gradle/gradle/v8.9.0/gradle/wrapper/gradle-wrapper.jar
+          fi
+          chmod +x gradlew
 
       - name: Build Debug APK with Gradle
         run: ./gradlew assembleDebug --stacktrace --no-daemon
