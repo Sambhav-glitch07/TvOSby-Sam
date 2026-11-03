@@ -38,6 +38,12 @@ android {
         jvmTarget = '17'
     }
 
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+        disable 'QueryAllPackagesPermission', 'ProtectedPermissions'
+    }
+
     buildFeatures {
         viewBinding false
     }

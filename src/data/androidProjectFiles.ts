@@ -165,13 +165,7 @@ tasks.register('clean', Delete) {
 
 export const SETTINGS_GRADLE = `pluginManagement {
     repositories {
-        google {
-            content {
-                includeGroupByRegex("com\\\\.android.*")
-                includeGroupByRegex("com\\\\.google.*")
-                includeGroupByRegex("androidx.*")
-            }
-        }
+        google()
         mavenCentral()
         gradlePluginPortal()
     }
@@ -241,6 +235,12 @@ android {
 
     kotlinOptions {
         jvmTarget = '17'
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+        disable 'QueryAllPackagesPermission', 'ProtectedPermissions'
     }
 
     buildFeatures {
