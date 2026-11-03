@@ -23,50 +23,16 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Ensure Android Project Root & Files
-        run: |
-          echo "Verifying Android project files..."
-          # If repository was pushed with files in android-project/ instead of root, copy them
-          if [ -d "android-project" ] && [ ! -f "settings.gradle" ]; then
-            echo "Copying files from android-project to workspace root..."
-            cp -rn android-project/* . || true
-          fi
-
-      - name: Prepare Gradle Wrapper
-        run: |
-          echo "Ensuring Gradle wrapper is present..."
-          if [ ! -f "gradlew" ]; then
-            if [ -f "android-project/gradlew" ]; then
-              cp android-project/gradlew .
-            else
-              echo "Generating gradle wrapper via system gradle..."
-              gradle wrapper --gradle-version 8.9 --distribution-type bin
-            fi
-          fi
-          chmod +x gradlew
-          ls -la gradlew
+      - name: Grant Execute Permission for Gradlew
+        run: chmod +x gradlew
 
       - name: Build Debug APK with Gradle
         run: ./gradlew assembleDebug --stacktrace --no-daemon
-
-      - name: Verify Debug APK Output
-        id: check_apk
-        run: |
-          APK_FILE=$(find . -name "*debug*.apk" -type f | head -n 1)
-          if [ -z "$APK_FILE" ]; then
-            echo "::error::No debug APK found after assembleDebug!"
-            exit 1
-          fi
-          echo "Found APK: $APK_FILE"
-          echo "apk_path=$APK_FILE" >> $GITHUB_OUTPUT
 
       - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Sambhav-TV-OS-Launcher-Debug-APK
-          path: ${{ steps.check_apk.outputs.apk_path }}
+          path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
           retention-days: 14

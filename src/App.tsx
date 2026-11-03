@@ -32,7 +32,6 @@ import {
   TV_INPUTS
 } from './data/mockData';
 import { MAIN_ACTIVITY_KOTLIN_CODE } from './data/mainActivitySource';
-import { TvRemote } from './components/TvRemote';
 import { ProjectInspector } from './components/ProjectInspector';
 import { TvSettingsModal } from './components/TvSettingsModal';
 import { AppLaunchOverlay } from './components/AppLaunchOverlay';
@@ -64,7 +63,6 @@ export default function App() {
   ]);
 
   // Modal / Overlays
-  const [isRemoteOpen, setIsRemoteOpen] = useState<boolean>(true);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [isProjectInspectorOpen, setIsProjectInspectorOpen] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(false);
@@ -868,33 +866,6 @@ export default function App() {
           </div>
         </div>
       </div>
-
-      {/* Interactive TCL TV Remote Control Floating Widget */}
-      <TvRemote
-        onDpad={handleDpadMove}
-        onSelect={handleSelect}
-        onBack={handleBack}
-        onHome={() => {
-          setActiveTab('home');
-          setFocusTarget({ type: 'heroAction', action: 'play' });
-          scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        onMenu={() => setIsSettingsOpen(true)}
-        onInput={() => {
-          setFocusTarget({ type: 'hardwareInput', index: 0 });
-          showToast('Navigated to TCL Hardware Inputs');
-        }}
-        isMuted={isMuted}
-        onToggleMute={() => {
-          setIsMuted(!isMuted);
-          showToast(!isMuted ? 'TV Audio Muted' : 'TV Audio Unmuted (35%)');
-        }}
-        onPowerToggle={() => {
-          showToast('TV Standby Simulated');
-        }}
-        isOpen={isRemoteOpen}
-        onToggleOpen={() => setIsRemoteOpen(!isRemoteOpen)}
-      />
 
       {/* Simulated App Launch Overlay */}
       {(launchedApp || launchedMedia) && (
