@@ -23,22 +23,26 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - name: Ensure Gradle Wrapper & Permissions
+      - name: Ensure Gradle Wrapper, Keystore & Permissions
         run: |
           mkdir -p gradle/wrapper
           if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ]; then
             echo "Fetching official gradle-wrapper.jar for Gradle 8.9..."
             curl -sSLo gradle/wrapper/gradle-wrapper.jar https://raw.githubusercontent.com/gradle/gradle/v8.9.0/gradle/wrapper/gradle-wrapper.jar
           fi
+          if [ ! -f "app/debug.keystore" ]; then
+            echo "Generating consistent keystore for reproducible APK signatures..."
+            keytool -genkey -v -keystore app/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          fi
           chmod +x gradlew
 
-      - name: Build Debug APK with Gradle
-        run: ./gradlew assembleDebug --stacktrace --info --no-daemon
+      - name: Build Debug & Release APKs with Gradle
+        run: ./gradlew assembleDebug assembleRelease --stacktrace --info --no-daemon
 
-      - name: Upload Debug APK Artifact
+      - name: Upload Launcher APK Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Sambhav-TV-OS-Launcher-Debug-APK
-          path: app/build/outputs/apk/debug/*.apk
+          name: Sambhav-TV-OS-Launcher-APKs
+          path: app/build/outputs/apk/**/*.apk
           if-no-files-found: error
           retention-days: 14

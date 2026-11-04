@@ -9,23 +9,35 @@ android {
 
     defaultConfig {
         applicationId "tv.sambhav.os.launcher"
-        minSdk 28
+        minSdk 21
         targetSdk 34
-        versionCode 100
-        versionName "1.0.0-cinematic"
+        versionCode 101
+        versionName "1.0.1-tvos"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        appSignConfig {
+            storeFile file("debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
             shrinkResources false
+            signingConfig signingConfigs.appSignConfig
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            applicationIdSuffix ".debug"
             debuggable true
+            signingConfig signingConfigs.appSignConfig
         }
     }
 

@@ -33,23 +33,27 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - name: Ensure Gradle Wrapper & Permissions
+      - name: Ensure Gradle Wrapper, Keystore & Permissions
         run: |
           mkdir -p gradle/wrapper
           if [ ! -f "gradle/wrapper/gradle-wrapper.jar" ]; then
             echo "Fetching official gradle-wrapper.jar for Gradle 8.9..."
             curl -sSLo gradle/wrapper/gradle-wrapper.jar https://raw.githubusercontent.com/gradle/gradle/v8.9.0/gradle/wrapper/gradle-wrapper.jar
           fi
+          if [ ! -f "app/debug.keystore" ]; then
+            echo "Generating consistent keystore for reproducible APK signatures..."
+            keytool -genkey -v -keystore app/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          fi
           chmod +x gradlew
 
-      - name: Build Debug APK with Gradle
-        run: ./gradlew assembleDebug --stacktrace --no-daemon
+      - name: Build Debug & Release APKs with Gradle
+        run: ./gradlew assembleDebug assembleRelease --stacktrace --info --no-daemon
 
-      - name: Upload Debug APK Artifact
+      - name: Upload Launcher APK Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Sambhav-TV-OS-Launcher-Debug-APK
-          path: app/build/outputs/apk/debug/*.apk
+          name: Sambhav-TV-OS-Launcher-APKs
+          path: app/build/outputs/apk/**/*.apk
           if-no-files-found: error
           retention-days: 14
 `;
@@ -186,6 +190,7 @@ export const GRADLE_PROPERTIES = `org.gradle.jvmargs=-Xmx3072m -Dfile.encoding=U
 android.useAndroidX=true
 android.nonTransitiveRClass=true
 kotlin.code.style=official
+android.injected.testOnly=false
 `;
 
 export const GRADLE_WRAPPER_PROPERTIES = `distributionBase=GRADLE_USER_HOME
@@ -208,23 +213,35 @@ android {
 
     defaultConfig {
         applicationId "tv.sambhav.os.launcher"
-        minSdk 28
+        minSdk 21
         targetSdk 34
-        versionCode 100
-        versionName "1.0.0-cinematic"
+        versionCode 101
+        versionName "1.0.1-tvos"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        appSignConfig {
+            storeFile file("debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
             shrinkResources false
+            signingConfig signingConfigs.appSignConfig
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            applicationIdSuffix ".debug"
             debuggable true
+            signingConfig signingConfigs.appSignConfig
         }
     }
 
@@ -292,7 +309,7 @@ export const ANDROID_MANIFEST = `<?xml version="1.0" encoding="utf-8"?>
     xmlns:tools="http://schemas.android.com/tools"
     package="tv.sambhav.os.launcher">
 
-    <!-- TV Launcher Hardware Features -->
+    <!-- Explicitly declare all hardware features optional for Android TV compatibility -->
     <uses-feature
         android:name="android.software.leanback"
         android:required="false" />
@@ -300,10 +317,25 @@ export const ANDROID_MANIFEST = `<?xml version="1.0" encoding="utf-8"?>
         android:name="android.hardware.touchscreen"
         android:required="false" />
     <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
         android:name="android.hardware.microphone"
         android:required="false" />
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="false" />
 
-    <!-- Query packages on Android 11+ (API 30+) while maintaining API 28 backwards compatibility -->
+    <!-- Query packages on Android 11+ (API 30+) while maintaining backwards compatibility -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -322,22 +354,27 @@ export const ANDROID_MANIFEST = `<?xml version="1.0" encoding="utf-8"?>
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:clearTaskOnLaunch="true"
-            android:stateNotNeeded="true"
             android:screenOrientation="landscape"
             android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenLayout|screenSize|smallestScreenSize">
 
-            <!-- Default System Launcher -->
+            <!-- Primary Home / Android TV Launcher Intent Filter -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
-            <!-- Android TV Leanback Launcher -->
+            <!-- Leanback TV Launcher Intent Filter -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!-- Standard Launcher Intent Filter for Sideloading compatibility -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 

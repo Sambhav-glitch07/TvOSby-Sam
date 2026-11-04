@@ -13,7 +13,8 @@ import tv.sambhav.os.launcher.view.FocusElevationHelper
 class AppTileAdapter(
     private var apps: List<AppItem>,
     private val onAppClick: (AppItem) -> Unit,
-    private val onAppLongClick: ((AppItem) -> Unit)? = null
+    private val onAppLongClick: ((AppItem) -> Unit)? = null,
+    private val onAppFocused: ((AppItem) -> Unit)? = null
 ) : RecyclerView.Adapter<AppTileAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -38,9 +39,13 @@ class AppTileAdapter(
 
         FocusElevationHelper.attachFocusAnimation(
             view = holder.root,
-            focusedScale = 1.12f,
+            focusedScale = 1.10f,
             elevateZ = true
-        )
+        ) { hasFocus ->
+            if (hasFocus) {
+                onAppFocused?.invoke(app)
+            }
+        }
 
         holder.root.setOnClickListener {
             onAppClick(app)

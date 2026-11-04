@@ -32,80 +32,123 @@ class AppDiscoveryManager(private val context: Context) {
         val seenPackages = HashSet<String>()
         val myPackageName = context.packageName
 
-        // 1. Query Android TV Leanback-compatible applications first
-        val leanbackIntent = Intent(Intent.ACTION_MAIN, null).apply {
-            addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER)
-        }
-        val leanbackResolves: List<ResolveInfo> = try {
-            packageManager.queryIntentActivities(leanbackIntent, 0)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error querying leanback activities", e)
-            emptyList()
-        }
-
-        for (info in leanbackResolves) {
-            val pkg = info.activityInfo.packageName
-            if (pkg == myPackageName || seenPackages.contains(pkg)) continue
-
-            try {
-                val label = info.loadLabel(packageManager).toString()
-                val icon = info.loadIcon(packageManager)
-                val banner = info.activityInfo.loadBanner(packageManager)
-
-                val item = AppItem(
-                    packageName = pkg,
-                    activityName = info.activityInfo.name,
-                    label = label,
-                    icon = icon,
-                    banner = banner,
-                    isLeanbackCompatible = true,
-                    category = categorizePackage(pkg)
-                )
-                appList.add(item)
-                seenPackages.add(pkg)
-            } catch (e: Exception) {
-                Log.w(TAG, "Skipping resolve info: $pkg", e)
+        try {
+            // 1. Query Android TV Leanback-compatible applications first
+            val leanbackIntent = Intent(Intent.ACTION_MAIN, null).apply {
+                addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER)
             }
-        }
-
-        // 2. Query Standard Android Launchers as fallback for sideloaded or standard apps
-        val standardIntent = Intent(Intent.ACTION_MAIN, null).apply {
-            addCategory(Intent.CATEGORY_LAUNCHER)
-        }
-        val standardResolves: List<ResolveInfo> = try {
-            packageManager.queryIntentActivities(standardIntent, 0)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error querying standard activities", e)
-            emptyList()
-        }
-
-        for (info in standardResolves) {
-            val pkg = info.activityInfo.packageName
-            if (pkg == myPackageName || seenPackages.contains(pkg)) continue
-
-            try {
-                val label = info.loadLabel(packageManager).toString()
-                val icon = info.loadIcon(packageManager)
-
-                val item = AppItem(
-                    packageName = pkg,
-                    activityName = info.activityInfo.name,
-                    label = label,
-                    icon = icon,
-                    banner = null,
-                    isLeanbackCompatible = false,
-                    category = categorizePackage(pkg)
-                )
-                appList.add(item)
-                seenPackages.add(pkg)
-            } catch (e: Exception) {
-                Log.w(TAG, "Skipping standard package: $pkg", e)
+            val leanbackResolves: List<ResolveInfo> = try {
+                packageManager.queryIntentActivities(leanbackIntent, 0)
+            } catch (t: Throwable) {
+                Log.e(TAG, "Error querying leanback activities", t)
+                emptyList()
             }
-        }
 
-        // Sort alphabetically by label
-        appList.sortBy { it.label.lowercase() }
+            for (info in leanbackResolves) {
+                val pkg = info.activityInfo.packageName
+                if (pkg == myPackageName || seenPackages.contains(pkg)) continue
+
+                try {
+                    val label = info.loadLabel(packageManager).toString()
+                    val icon = try {
+                        info.loadIcon(packageManager)
+                    } catch (t: Throwable) {
+                        null
+                    }
+
+                    val item = AppItem(
+                        packageName = pkg,
+                        activityName = info.activityInfo.name,
+                        label = label,
+                        icon = icon,
+                        banner = null,
+                        isLeanbackCompatible = true,
+                        category = categorizePackage(pkg),
+                        dominantColor = getAppAmbientColor(pkg)
+                    )
+                    appList.add(item)
+                    seenPackages.add(pkg)
+                } catch (t: Throwable) {
+                    Log.w(TAG, "Skipping resolve info: $pkg", t)
+                }
+            }
+
+            // 2. Query Standard Android Launchers as fallback for sideloaded or standard apps
+            val standardIntent = Intent(Intent.ACTION_MAIN, null).apply {
+                addCategory(Intent.CATEGORY_LAUNCHER)
+            }
+            val standardResolves: List<ResolveInfo> = try {
+                packageManager.queryIntentActivities(standardIntent, 0)
+            } catch (t: Throwable) {
+                Log.e(TAG, "Error querying standard activities", t)
+                emptyList()
+            }
+
+            for (info in standardResolves) {
+                val pkg = info.activityInfo.packageName
+                if (pkg == myPackageName || seenPackages.contains(pkg)) continue
+
+                try {
+                    val label = info.loadLabel(packageManager).toString()
+                    val icon = try {
+                        info.loadIcon(packageManager)
+                    } catch (t: Throwable) {
+                        null
+                    }
+
+                    val item = AppItem(
+                        packageName = pkg,
+                        activityName = info.activityInfo.name,
+                        label = label,
+                        icon = icon,
+                        banner = null,
+                        isLeanbackCompatible = false,
+                        category = categorizePackage(pkg),
+                        dominantColor = getAppAmbientColor(pkg)
+                    )
+                    appList.add(item)
+                    seenPackages.add(pkg)
+                } catch (t: Throwable) {
+                    Log.w(TAG, "Skipping standard package: $pkg", t)
+                }
+            }
+
+            // Sort alphabetically by label
+            appList.sortBy { it.label.lowercase() }
+        } catch (t: Throwable) {
+            Log.e(TAG, "Global error discovering TV apps: ${t.message}", t)
+        }
         appList
+    }
+
+    /**
+     * Generates a signature liquid crystal glass ambient color for any TV app.
+     */
+    fun getAppAmbientColor(pkg: String): Int {
+        val lower = pkg.lowercase()
+        return when {
+            lower.contains("netflix") -> android.graphics.Color.parseColor("#38060E")
+            lower.contains("youtube") -> android.graphics.Color.parseColor("#3D0808")
+            lower.contains("primevideo") || lower.contains("amazonvideo") -> android.graphics.Color.parseColor("#092240")
+            lower.contains("disney") -> android.graphics.Color.parseColor("#0C184A")
+            lower.contains("hotstar") -> android.graphics.Color.parseColor("#06173B")
+            lower.contains("spotify") -> android.graphics.Color.parseColor("#07331F")
+            lower.contains("apple") -> android.graphics.Color.parseColor("#1C2029")
+            lower.contains("plex") -> android.graphics.Color.parseColor("#382305")
+            lower.contains("twitch") -> android.graphics.Color.parseColor("#270E45")
+            lower.contains("tcl") -> android.graphics.Color.parseColor("#38090C")
+            lower.contains("setting") -> android.graphics.Color.parseColor("#151D28")
+            else -> {
+                val hues = intArrayOf(
+                    android.graphics.Color.parseColor("#0F2538"),
+                    android.graphics.Color.parseColor("#201235"),
+                    android.graphics.Color.parseColor("#0A2B20"),
+                    android.graphics.Color.parseColor("#331812"),
+                    android.graphics.Color.parseColor("#122A30")
+                )
+                hues[Math.abs(pkg.hashCode()) % hues.size]
+            }
+        }
     }
 
     /**

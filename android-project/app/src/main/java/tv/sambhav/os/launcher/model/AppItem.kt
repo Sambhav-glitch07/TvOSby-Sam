@@ -15,7 +15,8 @@ data class AppItem(
     val isLeanbackCompatible: Boolean = true,
     val launchCount: Int = 0,
     val lastUsedTimestamp: Long = 0L,
-    val category: AppCategory = AppCategory.ENTERTAINMENT
+    val category: AppCategory = AppCategory.ENTERTAINMENT,
+    val dominantColor: Int = android.graphics.Color.parseColor("#0C182A")
 )
 
 enum class AppCategory {
